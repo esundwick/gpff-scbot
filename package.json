@@ -1,0 +1,30 @@
+{
+  "name": "gpff-scbot",
+  "version": "1.0.0",
+  "description": "slackbot to interact with gpff members",
+  "main": "main.js",
+  "dependencies": {
+    "botkit": "^0.5.7",
+    "fbgraph": "^1.4.1",
+    "request": "^2.81.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \\\"Error: no test specified\\\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/esundwick/gpff-scbot.git"
+  },
+  "keywords": [
+    "slackbot",
+    "experiments",
+    "botkit"
+  ],
+  "author": "esundwick",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/esundwick/gpff-scbot/issues"
+  },
+  "homepage": "https://github.com/esundwick/gpff-scbot#readme"
+}
