@@ -96,6 +96,7 @@ if (process.env.studio_token) {
     console.log('To enable, pass in a studio_token parameter with a token from https://studio.botkit.ai/');
 }
 
+/* trying for slash commands 
 controller.on('slash_command',function(slashCommand,message) { 
   // reply to slash command
   switch (message.command) {
@@ -109,8 +110,7 @@ controller.on('slash_command',function(slashCommand,message) {
       slashCommand.replyPrivate(message,"I don't know how to " + message.command + " yet.");
   }
 });
-
-/* trying for slash commands */
+*/
 
 /* maybe RTM is deprecated...
 bot.startRTM(function(err,bot,payload) {
