@@ -1,15 +1,18 @@
+require('dotenv').config() // set up .env with access tokens
+
+
 var botkit = require('botkit');
-var config = require('./config.json');
+// var config = require('./config.json');
 
 var controller = botkit.slackbot({
-	clientID: config.slack.client_id,
-	clientSecret: config.slack.client_secret,
+	clientID: process.env.SLACK_CLIENT_ID,
+	clientSecret: process.env.SLACK_CLIENT_SECRET,
 	scopes: ['bot'],
 	require_delivery: true
 });
 
 var bot = controller.spawn({
-  token: config.slack.bot_user_token
+  token: process.env.SLACK_BOT_TOKEN
 });
 
 
@@ -41,7 +44,8 @@ controller.hears('hello',['direct_message','direct_mention','mention'],function(
   bot.reply(message,'Hello yourself.');
 });
 
-controller.on('slash_command',function(bot,message) {
+controller.on('slash_command',function(bot,message) { 
   // reply to slash command
-  bot.replyPublic(message,'Everyone can see the results of this slash command');
+  // DON'T FORGET TO CHECK VERIFICATION TOKEN WHEN THIS IS READY - CHECK SLACK AND BOTKIT DOCS
+  bot.replyPublic(message,'You asked to define ');
 });
