@@ -44,8 +44,15 @@ controller.hears('hello',['direct_message','direct_mention','mention'],function(
   bot.reply(message,'Hello yourself.');
 });
 
-controller.on('slash_command',function(bot,message) { 
-  // reply to slash command
-  // DON'T FORGET TO CHECK VERIFICATION TOKEN WHEN THIS IS READY - CHECK SLACK AND BOTKIT DOCS
-  bot.replyPublic(message,'You asked to define ');
-});
+controller.on('slash_command',function(slashCommand,message) { 
+	// reply to slash command
+	switch (message.command) {
+  		case '/define':
+  			if (message.token !== process.env.SLACK_VERIFICATION_TOKEN) return; // make sure it's actually the bot making the request
+  			var defineRequest = message.text;
+  			slashCommand.replyPrivate(message, 'You ased to define ' + defineRequest);
+		break;
+		default:
+			slashCommand.replyPrivate(message,"I don't know how to " + message.command + " yet.");
+	}
+}); 

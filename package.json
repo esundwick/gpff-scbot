@@ -1,6 +1,6 @@
 {
   "name": "gpff-scbot",
-  "version": "1.0.0",
+  "version": "0.0.5",
   "description": "slackbot to interact with gpff members",
   "main": "main.js",
   "dependencies": {
@@ -11,6 +11,7 @@
   },
   "devDependencies": {},
   "scripts": {
+    "start": "node main.js",
     "test": "echo \\\"Error: no test specified\\\" && exit 1"
   },
   "repository": {
