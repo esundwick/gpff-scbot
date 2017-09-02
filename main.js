@@ -1,7 +1,6 @@
 require('dotenv').config(); // set up .env with access tokens
 
 var botkit = require('botkit');
-var mongo = require('botkit-storage-mongo');
 var debug = require('debug')('botkit:main');
 // var config = require('./config.json');
 
@@ -17,7 +16,7 @@ var bot_options = {
 // this should be active in heroku, otherwise, we can use the json data store
 // should eliminate the team errors
 if (process.env.MONGO_URI) {
-    var mongoStorage = mongo({mongoUri: process.env.MONGO_URI});
+    var mongoStorage = require('botkit-storage-mongo')({mongoUri: process.env.MONGO_URI});
     bot_options.storage = mongoStorage;
 } else {
     bot_options.json_file_store = __dirname + '/.data/db/'; // store user data in a simple JSON format
@@ -31,12 +30,14 @@ var bot = controller.spawn({
   token: process.env.SLACK_BOT_TOKEN
 });
 
-/* wtf syntax is this???
-bot.api.team.info{}, (err, response) ->
-	controller.saveTeam(response.team, ->
-		console.log "Saved team info"
-	);
-*/
+// fix for team errors?
+bot.api.team.info({}, (err, res) => {
+    controller.storage.teams.save({id: res.team.id}, (err) => {
+        if (err) {
+            console.error(err)
+        };
+    });
+});
 
 bot.startRTM(function(err,bot,payload) {
   if (err) {
@@ -60,6 +61,7 @@ controller.setupWebserver(process.env.PORT || 3001, function(err, webserver) {
       bot.closeRTM();
   }, 5000);
 });*/
+
 
 // give the bot something to listen for.
 controller.hears('hello',['direct_message','direct_mention','mention'],function(bot,message) {
