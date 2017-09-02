@@ -1,20 +1,41 @@
-require('dotenv').config() // set up .env with access tokens
-
+require('dotenv').config(); // set up .env with access tokens
 
 var botkit = require('botkit');
+var debug = require('debug')('botkit:main');
 // var config = require('./config.json');
 
-var controller = botkit.slackbot({
+var bot_options = {
 	clientID: process.env.SLACK_CLIENT_ID,
 	clientSecret: process.env.SLACK_CLIENT_SECRET,
 	scopes: ['bot'],
+	studio_token: process.env.studio_token,
+	studio_command_uri: process.env.studio_command_uri,
 	require_delivery: true
-});
+};
+
+// this should be active in heroku, otherwise, we can use the json data store
+// should eliminate the team errors
+if (process.env.MONGO_URI) {
+    var mongoStorage = require('botkit-storage-mongo')({mongoUri: process.env.MONGO_URI});
+    bot_options.storage = mongoStorage;
+} else {
+    bot_options.json_file_store = __dirname + '/.data/db/'; // store user data in a simple JSON format
+}
+
+var controller = botkit.slackbot(bot_options);
+
+controller.startTicking();
 
 var bot = controller.spawn({
   token: process.env.SLACK_BOT_TOKEN
 });
 
+/* wtf syntax is this???
+bot.api.team.info{}, (err, response) ->
+	controller.saveTeam(response.team, ->
+		console.log "Saved team info"
+	);
+*/
 
 bot.startRTM(function(err,bot,payload) {
   if (err) {
@@ -48,7 +69,8 @@ controller.on('slash_command',function(slashCommand,message) {
 	// reply to slash command
 	switch (message.command) {
   		case '/define':
-  			if (message.token !== process.env.SLACK_VERIFICATION_TOKEN) return; // make sure it's actually the bot making the request
+  		// make sure it's actually the bot making the request
+  			if (message.token !== process.env.SLACK_VERIFICATION_TOKEN) return; 
   			var defineRequest = message.text;
   			slashCommand.replyPrivate(message, 'You ased to define ' + defineRequest);
 		break;
