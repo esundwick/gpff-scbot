@@ -32,6 +32,15 @@ var bot = controller.spawn({
   token: process.env.SLACK_BOT_TOKEN
 });
 
+// potential fix if slash command starts blowing up
+bot.api.team.info({}, function (err, res) {
+    if (err) return console.error(err);
+    controller.storage.teams.save({id: res.team.id}, (err) => {
+        if (err) console.error(err);
+        console.log('Saved team inforation');
+    });
+});
+
 // Set up an Express-powered webserver to expose oauth and webhook endpoints
 var webserver = require(__dirname + '/components/express_webserver.js')(controller);
 
@@ -52,16 +61,6 @@ require(__dirname + '/components/plugin_dashbot.js')(controller);
 var normalizedPath = require("path").join(__dirname, "skills");
 require("fs").readdirSync(normalizedPath).forEach(function(file) {
   require("./skills/" + file)(controller);
-});
-
-// potential fix if slash command starts blowing up
-bot.api.team.info({}, function (err, res) {
-    if (err) return console.error(err);
-    controller.storage.teams.save({id: res.team.id}, (err) => {
-        if (err) {
-            console.error(err);
-        };
-    });
 });
 
 // This captures and evaluates any message sent to the bot as a DM
