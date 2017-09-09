@@ -54,6 +54,11 @@ require("fs").readdirSync(normalizedPath).forEach(function(file) {
   require("./skills/" + file)(controller);
 });
 
+//setup webhook for slash command
+controller.setupWebserver(process.env.port, function (err, webserver) {
+    controller.createWebhookEndpoints(controller.webserver);
+});
+
 // potential fix if slash command starts blowing up
 /* bot.api.team.info({}, function (err, res) {
     if (err) return console.error(err);
