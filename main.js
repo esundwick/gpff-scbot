@@ -35,7 +35,8 @@ var bot = controller.spawn({
 // potential fix if slash command starts blowing up
 bot.api.team.info({}, function (err, res) {
     if (err) return console.error(err);
-    controller.storage.teams.save({id: res.team.id}, (err) => {
+//    controller.storage.teams.save({id: res.team.id}, (err) => {
+    controller.saveTeam(res.team, function (err, res) {
         if (err) console.error(err);
         console.log('Saved team inforation');
     });
