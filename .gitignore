@@ -6,3 +6,4 @@ config.json
 *.env
 npm-debug.log
 .data/db/teams/T08H66C13.json
+skills/define.js

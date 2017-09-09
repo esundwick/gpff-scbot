@@ -54,14 +54,15 @@ require("fs").readdirSync(normalizedPath).forEach(function(file) {
   require("./skills/" + file)(controller);
 });
 
-bot.api.team.info({}, function (err, res) {
+// potential fix if slash command starts blowing up
+/* bot.api.team.info({}, function (err, res) {
     if (err) return console.error(err);
     controller.storage.teams.save({id: res.team.id}, (err) => {
         if (err) {
             console.error(err);
         };
     });
-});
+}); */
 
 // This captures and evaluates any message sent to the bot as a DM
 // or sent to the bot in the form "@bot message" and passes it to
