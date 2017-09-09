@@ -32,7 +32,12 @@ module.exports = function(controller) {
     });
 
     controller.webserver = webserver;
-
+    controller.createWebhookEndpoints(controller.webserver);
     return webserver;
 
 }
+/*
+controller.setupWebserver(process.env.PORT, function (err, webserver) {
+    controller.createWebhookEndpoints(controller.webserver);
+});
+*/
