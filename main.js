@@ -55,7 +55,7 @@ require("fs").readdirSync(normalizedPath).forEach(function(file) {
 });
 
 //setup webhook for slash command
-controller.setupWebserver(process.env.port, function (err, webserver) {
+controller.setupWebserver(process.env.PORT, function (err, webserver) {
     controller.createWebhookEndpoints(controller.webserver);
 });
 
