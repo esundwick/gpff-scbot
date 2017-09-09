@@ -1,0 +1,8 @@
+
+config.json
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+*.env
+npm-debug.log
+.data/db/teams/T08H66C13.json

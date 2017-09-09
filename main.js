@@ -32,17 +32,6 @@ var bot = controller.spawn({
   token: process.env.SLACK_BOT_TOKEN
 });
 
-// fix for team errors?
-/*
-bot.api.team.info({}, (err, res) => {
-    controller.storage.teams.save({id: res.team.id}, (err) => {
-        if (err) {
-            console.error(err)
-        };
-    });
-});
-*/
-
 // Set up an Express-powered webserver to expose oauth and webhook endpoints
 var webserver = require(__dirname + '/components/express_webserver.js')(controller);
 
@@ -63,6 +52,15 @@ require(__dirname + '/components/plugin_dashbot.js')(controller);
 var normalizedPath = require("path").join(__dirname, "skills");
 require("fs").readdirSync(normalizedPath).forEach(function(file) {
   require("./skills/" + file)(controller);
+});
+
+bot.api.team.info({}, function (err, res) {
+    if (err) return console.error(err);
+    controller.storage.teams.save({id: res.team.id}, (err) => {
+        if (err) {
+            console.error(err);
+        };
+    });
 });
 
 // This captures and evaluates any message sent to the bot as a DM
@@ -90,27 +88,24 @@ if (process.env.studio_token) {
             debug('Botkit Studio: ', err);
         });
     });
+    controller.on('slash_command',function(slashCommand,message) { 
+        // reply to slash command
+        switch (message.command) {
+        case '/define':
+            // make sure it's actually the bot making the request
+            if (message.token !== process.env.SLACK_VERIFICATION_TOKEN) return; 
+            var defineRequest = message.text;
+            slashCommand.replyPrivate(message, 'You ased to define ' + defineRequest);
+        break;
+        default:
+            slashCommand.replyPrivate(message,"I don't know how to " + message.command + " yet.");
+        }
+    });
 } else {
     console.log('~~~~~~~~~~');
     console.log('NOTE: Botkit Studio functionality has not been enabled');
     console.log('To enable, pass in a studio_token parameter with a token from https://studio.botkit.ai/');
 }
-
-/* trying for slash commands 
-controller.on('slash_command',function(slashCommand,message) { 
-  // reply to slash command
-  switch (message.command) {
-      case '/define':
-      // make sure it's actually the bot making the request
-        if (message.token !== process.env.SLACK_VERIFICATION_TOKEN) return; 
-        var defineRequest = message.text;
-        slashCommand.replyPrivate(message, 'You ased to define ' + defineRequest);
-    break;
-    default:
-      slashCommand.replyPrivate(message,"I don't know how to " + message.command + " yet.");
-  }
-});
-*/
 
 /* maybe RTM is deprecated...
 bot.startRTM(function(err,bot,payload) {
@@ -141,3 +136,14 @@ setTimeout(function() {
   bot.reply(message,'Hello yourself.');
 });
 */
+
+// fix for team errors?
+
+bot.api.team.info({}, function (err, res) {
+    if (err) return console.error(err);
+    controller.storage.teams.save({id: res.team.id}, (err) => {
+        if (err) {
+            console.error(err);
+        };
+    });
+});

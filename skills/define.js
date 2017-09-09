@@ -1,5 +1,20 @@
 var graph = require('fbgraph');
-var config = require('./config.json');
+//var config = require('./config.json');
+
+
+module.exports = function(controller) {
+	controller.hears(['^define (.*)','^define'], 'direct_message,direct_mention', function(bot, message) {
+      /*  if (message.match[1]) {
+            if () {
+                bot.reply(message, message.match[1]);
+            } else {
+                bot.reply(message, 'No match found');
+            }
+        } else {*/
+        bot.reply(message, 'I will try to look up whoever you ask me about.')
+    });
+}
+/*
 
 var accessToken = config.facebook.accessToken;
 var app_secret = config.facebook.app_secret;
@@ -42,7 +57,8 @@ graph.search(searchOptions, function (err, response){
 // after user clicks, auth 'code' will be set
 // we'll send that and get auth token
 
-/*graph.authorize({
+/*
+graph.authorize({
 	"client_id": conf.client_id
 ,	"redirect_uri": conf.redirect_uri
 ,	"client_secret": conf.client_secret
@@ -50,3 +66,4 @@ graph.search(searchOptions, function (err, response){
 }, function (err, fbResponse) {
 	fbResponse.redirect('/loggedIn');
 });
+*/
